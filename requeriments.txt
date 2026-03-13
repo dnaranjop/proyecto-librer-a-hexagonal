@@ -1,1 +1,15 @@
-streamlit
+# Validación de Datos y Dominio
+pydantic>=2.0.0
+
+# Framework de Interfaz de Usuario
+streamlit>=1.30.0
+
+# Pruebas Unitarias
+pytest>=8.0.0
+
+# Conectividad (Infraestructura)
+supabase>=2.0.0
+sqlite3-api  # Generalmente incluido en Python, pero útil para entornos virtuales
+
+# Utilidades
+python-dotenv>=1.0.0

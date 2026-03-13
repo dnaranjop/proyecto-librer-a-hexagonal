@@ -3,7 +3,7 @@ Entidad del Dominio: Libro
 Lógica de negocio pura, utilizando Pydantic para validación de invariantes.
 """
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 
 class Libro(BaseModel):
@@ -21,7 +21,7 @@ class Libro(BaseModel):
 
     # --- Validaciones de Invariantes (Reglas de Negocio) ---
     
-    @validator('titulo')
+    field_validator('titulo')
     def titulo_no_vacio(cls, v):
         if not v.strip():
             raise ValueError("El título no puede consistir solo en espacios en blanco")

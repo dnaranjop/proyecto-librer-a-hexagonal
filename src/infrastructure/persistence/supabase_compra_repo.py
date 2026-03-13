@@ -5,7 +5,8 @@ class SupabaseCompraRepository(CompraRepository):
     def __init__(self, url: str, key: str):
         self.supabase: Client = create_client(url, key)
 
-    def guardar(self, compra):
+    # CAMBIO: guardar -> formalizar_transaccion_compra
+    def formalizar_transaccion_compra(self, compra):
         # 1. Preparar la fecha como texto
         fecha_texto = compra.fecha.isoformat() if hasattr(compra.fecha, 'isoformat') else str(compra.fecha)
 
@@ -37,22 +38,23 @@ class SupabaseCompraRepository(CompraRepository):
             self.supabase.table("items_compra").insert(items_para_insertar).execute()
         
         return compra
-        return compra
 
-    # --- IMPLEMENTACIÓN DE LOS MÉTODOS QUE FALTABAN (EL CONTRATO) ---
-
-    def obtener_todas(self):
-        response = self.supabase.table("compras").select("*").execute()
-        return response.data
-
-    def obtener_por_id(self, compra_id):
+    # CAMBIO: obtener_por_id -> recuperar_detalle_de_compra
+    def recuperar_detalle_de_compra(self, compra_id):
         response = self.supabase.table("compras").select("*").eq("id", compra_id).execute()
         return response.data[0] if response.data else None
 
-    def obtener_por_usuario(self, nombre_usuario):
+    # CAMBIO: obtener_todas -> listar_historial_de_ventas
+    def listar_historial_de_ventas(self):
+        response = self.supabase.table("compras").select("*").execute()
+        return response.data
+
+    # CAMBIO: obtener_por_usuario -> consultar_compras_del_cliente
+    def consultar_compras_del_cliente(self, nombre_usuario):
         response = self.supabase.table("compras").select("*").eq("usuario_nombre", nombre_usuario).execute()
         return response.data
 
-    def contar_total_ventas(self):
-        response = self.supabase.table("compras").select("id", count="exact").execute()
-        return response.count if response.count else 0
+    # CAMBIO: contar_total_ventas -> calcular_volumen_total_ingresos
+    def calcular_volumen_total_ingresos(self):
+        response = self.supabase.table("compras").select("total").execute()
+        return sum(item['total'] for item in response.data) if response.data else 0

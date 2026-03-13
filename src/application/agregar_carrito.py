@@ -8,7 +8,8 @@ class AgregarAlCarrito:
         """
         Valida si hay stock antes de permitir agregar al carrito.
         """
-        libro = self.libro_repo.obtener_por_id(libro_id)
+        # CAMBIO: obtener_por_id -> buscar_libro_por_identificador
+        libro = self.libro_repo.buscar_libro_por_identificador(libro_id)
         
         if not libro:
             return carrito_actual, "Error: El libro no existe."
@@ -16,7 +17,7 @@ class AgregarAlCarrito:
         if not libro.tiene_stock(1):
             return carrito_actual, f"Error: No hay stock de '{libro.titulo}'."
 
-        # Si ya está en el carrito, aumentamos cantidad (opcional)
+        # Si ya está en el carrito, aumentamos cantidad
         for item in carrito_actual:
             if item['id'] == libro_id:
                 item['cantidad'] += 1

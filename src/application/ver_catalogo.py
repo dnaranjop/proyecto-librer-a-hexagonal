@@ -5,4 +5,5 @@ class VerCatalogo:
         self.libro_repo = libro_repo
 
     def ejecutar(self):
-        return self.libro_repo.obtener_todos()
+        # CAMBIO: De obtener_todos() a consultar_catalogo_completo()
+        return self.libro_repo.consultar_catalogo_completo()

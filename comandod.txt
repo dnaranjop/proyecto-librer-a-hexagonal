@@ -1,0 +1,25 @@
+
+1.Ejecutar todas las pruebas:
+* pytest tests/test_domain.py
+
+
+2.Ejecutar pruebas viendo el detalle de cada una (-v):
+* pytest -v tests/test_domain.py
+
+
+3. Verificar la Pureza Arquitectónica
+Este comando confirma que no rompiste las reglas de la Arquitectura Hexagonal (que el dominio no importe nada prohibido):
+* python verificar_pureza.py
+Resultado esperado: Debe decir 0 violaciones arquitectónicas detectadas.
+
+4. Ejecutar la Aplicación Completa (Fase 3)
+* python main.py
+Nota: Esto inicializará la base de datos y abrirá la interfaz de Streamlit en tu navegador.
+
+5. El Mensaje de Commit Profesional
+Para que el historial de Git sea impecable y el profesor vea el progreso de las fases, usa este comando para subir tus cambios finales:
+
+DOS
+git add .
+git commit -m "Fase 3: Implementación de Caso de Uso ProcesarCompra y blindaje de Dominio con Pydantic V2"
+git push origin hexagonal

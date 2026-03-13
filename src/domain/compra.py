@@ -3,7 +3,7 @@ Entidad del Dominio: Compra
 Representa una compra utilizando Pydantic para validación de reglas de negocio.
 """
 
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator
 from typing import List, Optional
 from datetime import datetime
 
@@ -35,14 +35,14 @@ class Compra(BaseModel):
 
     # --- Validaciones de Invariantes ---
 
-    @validator('total')
+    field_validator('total')
     def validar_limite_maximo(cls, v):
         LIMITE_MAXIMO = 1000000 
         if v > LIMITE_MAXIMO:
             raise ValueError(f"La compra excede el límite permitido de ${LIMITE_MAXIMO/100:.2f}")
         return v
 
-    @validator('items')
+    field_validator('items')
     def validar_lista_no_vacia(cls, v):
         if len(v) == 0:
             raise ValueError("La lista de productos no puede estar vacía")
