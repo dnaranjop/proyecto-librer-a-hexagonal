@@ -19,7 +19,6 @@ Nota: Esto inicializará la base de datos y abrirá la interfaz de Streamlit en 
 5. El Mensaje de Commit Profesional
 Para que el historial de Git sea impecable y el profesor vea el progreso de las fases, usa este comando para subir tus cambios finales:
 
-
 git add .
 git commit -m "Fase 3: Implementación de Caso de Uso ProcesarCompra y blindaje de Dominio con Pydantic V2"
 git push origin hexagonal
