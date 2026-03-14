@@ -13,8 +13,11 @@ from src.infrastructure.persistence.sqlite_compra_repo import SQLiteCompraReposi
 from src.infrastructure.notifications.console_notifier import ConsolePurchaseNotifier
 from src.infrastructure.persistence.supabase_libro_repo import SupabaseLibroRepository
 from src.infrastructure.persistence.supabase_compra_repo import SupabaseCompraRepository
+# FAKE en memoria 
+from src.infrastructure.persistence.memory_libro_repo import MemoryLibroRepository
+from src.infrastructure.persistence.memory_compra_repo import MemoryCompraRepository
 
-# Credenciales de Supabase (Mantenidas según tu código)
+# Credenciales de Supabase
 SUPABASE_URL = "https://nywodndiaeqhtujovohf.supabase.co" 
 SUPABASE_KEY = "sb_publishable_bpEYcnUwNJqRDWhJOTtPEw_GQ8trDgh"   
 
@@ -29,17 +32,21 @@ def run_ui():
         </style>
     """, unsafe_allow_html=True)
     
-    # --- INICIALIZACIÓN DE COMPONENTES ---
-    # libro_repo = SQLiteLibroRepository() # Comentado según tu preferencia
-    # compra_repo = SQLiteCompraRepository()
-    
-    # Inicializamos Supabase
-    libro_repo = SupabaseLibroRepository(SUPABASE_URL, SUPABASE_KEY)
-    compra_repo = SupabaseCompraRepository(SUPABASE_URL, SUPABASE_KEY)
+    # --- 1. INICIALIZACIÓN DE COMPONENTES ---
+    MODO_PRUEBA = True # Cambia a False para usar Supabase
+
+    if MODO_PRUEBA:
+        libro_repo = MemoryLibroRepository()
+        compra_repo = MemoryCompraRepository()
+        st.sidebar.warning("🏷️ Modo: Repositorio en Memoria (Fake)")
+    else:
+        libro_repo = SupabaseLibroRepository(SUPABASE_URL, SUPABASE_KEY)
+        compra_repo = SupabaseCompraRepository(SUPABASE_URL, SUPABASE_KEY)
+        st.sidebar.success("🌐 Modo: Supabase Cloud (Real)")
     
     notifier = ConsolePurchaseNotifier()
     
-    # Inyección de dependencias en los casos de uso
+    # Inyección de dependencias en los servicios
     cat_service = VerCatalogo(libro_repo)
     cart_service = AgregarAlCarrito(libro_repo)
     compra_service = ProcesarCompra(libro_repo, compra_repo)
@@ -47,7 +54,7 @@ def run_ui():
     if 'carrito' not in st.session_state:
         st.session_state.carrito = []
 
-    # --- SIDEBAR: CARRITO DE COMPRAS ---
+    # --- 2. SIDEBAR: CARRITO DE COMPRAS ---
     with st.sidebar:
         st.header("🛒 Tu Carrito")
         if not st.session_state.carrito:
@@ -62,7 +69,6 @@ def run_ui():
                 st.divider()
             
             st.subheader(f"Total: ${total_compra/100:.2f}")
-            
             nombre_cliente = st.text_input("Nombre del Cliente", key="cliente_nombre")
             
             if st.button("🚀 FINALIZAR COMPRA", type="primary"):
@@ -70,7 +76,6 @@ def run_ui():
                     st.warning("⚠️ Ingresa el nombre del cliente.")
                 else:
                     try:
-                        # Orquestación del caso de uso
                         resultado = compra_service.ejecutar(nombre_cliente, st.session_state.carrito)
                         notifier.enviar_ticket(resultado)
                         st.success(f"✅ ¡Compra exitosa!")
@@ -82,46 +87,43 @@ def run_ui():
                     except Exception as e:
                         st.error(f"🔥 Error inesperado: {e}")
 
-    # --- CUERPO PRINCIPAL: CATÁLOGO ---
+    # --- 3. CUERPO PRINCIPAL: CATÁLOGO ---
     st.title("📚 Librería Hexagonal")
     st.write("Bienvenido al catálogo gestionado con Arquitectura Limpia.")
 
-    # IMPORTANTE: Aquí se usan los métodos actualizados del adaptador
     try:
-        # Cambio: Aquí llamamos al servicio que usa el nuevo nombre del puerto
+        # Ahora cat_service sí existe en este nivel de la función
         libros_todos = cat_service.ejecutar() 
         
-        categorias = sorted(list(set([l.categoria for l in libros_todos])))
-        seleccion = st.multiselect("Filtrar por categoría:", categorias, default=categorias)
+        if not libros_todos:
+            st.warning("📭 No hay libros cargados en el repositorio actual.")
+        else:
+            categorias = sorted(list(set([l.categoria for l in libros_todos])))
+            seleccion = st.multiselect("Filtrar por categoría:", categorias, default=categorias)
+            st.divider()
 
-        st.divider()
-
-        cols = st.columns(3)
-        idx_col = 0
-
-        for libro in libros_todos:
-            if libro.categoria in seleccion:
-                with cols[idx_col]:
-                    with st.container():
-                        st.markdown(f"### {libro.titulo}")
-                        st.caption(f"🏷️ {libro.categoria} | ✍️ {libro.autor}")
-                        st.write(f"**Precio:** ${libro.precio/100:.2f}")
-                        st.write(f"**Stock disponible:** {libro.stock}")
-                        
-                        if st.button(f"➕ Agregar", key=f"btn_{libro.id}"):
-                            # El cart_service también debe usar el nombre de puerto actualizado internamente
-                            nuevo_cart, mensaje = cart_service.ejecutar(st.session_state.carrito, libro.id)
-                            st.session_state.carrito = nuevo_cart
-                            if "Error" in mensaje:
-                                st.error(mensaje)
-                            else:
+            if not seleccion:
+                st.info("Selecciona una categoría para ver los libros.")
+            else:
+                cols = st.columns(3)
+                idx_col = 0
+                for libro in libros_todos:
+                    if libro.categoria in seleccion:
+                        with cols[idx_col]:
+                            st.markdown(f"### {libro.titulo}")
+                            st.caption(f"✍️ {libro.autor}")
+                            st.write(f"**Precio:** ${libro.precio/100:.2f}")
+                            st.write(f"**Stock:** {libro.stock}")
+                            
+                            if st.button(f"➕ Agregar", key=f"btn_{libro.id}"):
+                                nuevo_cart, mensaje = cart_service.ejecutar(st.session_state.carrito, libro.id)
+                                st.session_state.carrito = nuevo_cart
                                 st.toast(mensaje)
                                 st.rerun()
-                    st.write("") # Espaciador
-                    
-                idx_col = (idx_col + 1) % 3
+                        idx_col = (idx_col + 1) % 3
     except Exception as e:
         st.error(f"Error al cargar el catálogo: {e}")
 
+# INICIO DE LA APLICACIÓN
 if __name__ == "__main__":
     run_ui()
