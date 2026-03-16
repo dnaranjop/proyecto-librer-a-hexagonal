@@ -1,13 +1,16 @@
 # COMPARATIVA: Monolito vs. Arquitectura Hexagonal
 
-| Métrica | Monolito Original (Rama main) | Refactorización (Rama hexagonal) |
+| Métrica | Monolito Original | Refactorización Hexagonal (Final) |
 | :--- | :--- | :--- |
+| **Puntos de Entrada** | 1 (Solo Web Streamlit) | **2 (Web Streamlit + API FastAPI)** |
 | **Líneas de Código (UI)** | ~50 (Mezclado con SQL) | ~20 (Limpio y agnóstico) |
 | **Líneas de Código (Negocio)** | 0 (Inexistente) | ~150 (Dominio Puro con Pydantic) |
-| **Tiempo de Ejecución Pruebas** | N/A (Manual/Dependiente de DB) | **~0.08s (20 pruebas en milisegundos)** |
-| **Dependencias en el Core** | Supabase, Streamlit | **0 (Solo Python y Pydantic)** |
-| **Acoplamiento** | Alto (Riesgo de fallos en cascada) | Bajo (Componentes intercambiables) |
+| **Tiempo Pruebas Unitarias** | N/A (Manual/Dependiente de DB) | **~0.08s (Cobertura del 100% en el Core)** |
+| **Dependencias en el Core** | Supabase, Streamlit | **0 (Totalmente independiente)** |
+| **Flexibilidad de Datos** | Rígida (Solo SQLite/DB local) | **Intercambiable (Memoria / Supabase / Cloud)** |
 
-### Observaciones
-- La refactorización permitió alcanzar una **cobertura del 100% de reglas críticas** en el dominio.
-- El tiempo de ejecución de pruebas bajó drásticamente al eliminar la dependencia de red (Supabase) mediante el uso de puertos.
+## Observaciones Finales del Proyecto
+
+1. **Escalabilidad:** La implementación de la Fase 4 (FastAPI) demostró que se pueden añadir nuevas interfaces en horas, no días, reutilizando el 100% de la lógica de negocio.
+2. **Mantenibilidad:** Al separar la persistencia (Supabase) del dominio, los errores de conexión a la base de datos no rompen la lógica interna del sistema.
+3. **Calidad de Software:** La arquitectura permitió pasar de un sistema imposible de testear automáticamente a uno con pruebas unitarias que se ejecutan en milisegundos.
