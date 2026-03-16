@@ -28,7 +28,7 @@ git push origin hexagonal
 git add app_monolitica.py
 
 # 2. Sellar el cambio con un mensaje descriptivo
-git commit -m "Agregado código monolítico con SQLite para contraste de arquitectura"
+git commit -m "Se pone el comentario de lo que se va a subir"
 
 # 3. Subir a la nube de GitHub
 git push origin main
