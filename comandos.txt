@@ -12,7 +12,7 @@ Este comando confirma que no rompiste las reglas de la Arquitectura Hexagonal (q
 * python verificar_pureza.py
 Resultado esperado: Debe decir 0 violaciones arquitectónicas detectadas.
 
-4. Ejecutar la Aplicación Completa (Fase 3)
+4. Ejecutar la Aplicación Completa 
 * python main.py
 Nota: Esto inicializará la base de datos y abrirá la interfaz de Streamlit en tu navegador.
 

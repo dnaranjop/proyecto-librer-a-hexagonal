@@ -33,7 +33,7 @@ def run_ui():
     """, unsafe_allow_html=True)
     
     # --- 1. INICIALIZACIÓN DE COMPONENTES ---
-    MODO_PRUEBA = True # Cambia a False para usar Supabase
+    MODO_PRUEBA = False # Cambia a False para usar Supabase
 
     if MODO_PRUEBA:
         libro_repo = MemoryLibroRepository()
