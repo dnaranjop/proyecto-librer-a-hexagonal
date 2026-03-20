@@ -3,7 +3,7 @@ import sys
 from fastapi import FastAPI, HTTPException
 
 # ESTO ES CLAVE: Permite que la API encuentre la carpeta 'src'
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
 
 from src.application.ver_catalogo import VerCatalogo
 from src.application.procesar_compra import ProcesarCompra
