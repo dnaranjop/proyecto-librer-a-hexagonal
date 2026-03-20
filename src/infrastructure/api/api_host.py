@@ -1,5 +1,6 @@
 import os
 import sys
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 
 # ESTO ES CLAVE: Permite que la API encuentre la carpeta 'src'
