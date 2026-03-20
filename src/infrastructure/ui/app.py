@@ -18,8 +18,9 @@ from src.infrastructure.persistence.memory_libro_repo import MemoryLibroReposito
 from src.infrastructure.persistence.memory_compra_repo import MemoryCompraRepository
 
 # Credenciales de Supabase
-SUPABASE_URL = "https://nywodndiaeqhtujovohf.supabase.co" 
-SUPABASE_KEY = "sb_publishable_bpEYcnUwNJqRDWhJOTtPEw_GQ8trDgh"   
+load_dotenv()
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")  
 
 def run_ui():
     st.set_page_config(page_title="Mini-Librería Hexagonal", layout="wide", page_icon="📚")

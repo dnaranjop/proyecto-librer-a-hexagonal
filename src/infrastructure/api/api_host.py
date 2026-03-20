@@ -10,10 +10,11 @@ from src.application.procesar_compra import ProcesarCompra
 from src.infrastructure.persistence.supabase_libro_repo import SupabaseLibroRepository
 from src.infrastructure.persistence.supabase_compra_repo import SupabaseCompraRepository
 
+load_dotenv()
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+
 app = FastAPI(title="API Librería Hexagonal")
-# --- CONFIGURACIÓN (Igual que en app.py) ---
-SUPABASE_URL = "https://nywodndiaeqhtujovohf.supabase.co"
-SUPABASE_KEY = "sb_publishable_bpEYcnUwNJqRDWhJOTtPEw_GQ8trDgh"
 
 libro_repo = SupabaseLibroRepository(SUPABASE_URL, SUPABASE_KEY)
 compra_repo = SupabaseCompraRepository(SUPABASE_URL, SUPABASE_KEY)

@@ -14,13 +14,17 @@ Resultado esperado: Debe decir 0 violaciones arquitectónicas detectadas.
 
 4. Ejecutar la Aplicación Completa 
 * python main.py
-Nota: Esto inicializará la base de datos y abrirá la interfaz de Streamlit en tu navegador.
 
-5. El Mensaje de Commit Profesional
+5.Para lanzar la App con FastAPI
+* python -m uvicorn src.infrastructure.api.api_host:app --reload
+http://127.0.0.1:8000/docs
+
+
+6. El Mensaje de Commit Profesional
 Para que el historial de Git sea impecable y el profesor vea el progreso de las fases, usa este comando para subir tus cambios finales:
 
 git add .
-git commit -m "Fase 3: Implementación de Caso de Uso ProcesarCompra y blindaje de Dominio con Pydantic V2"
+git commit -m " "
 git push origin hexagonal
 
 

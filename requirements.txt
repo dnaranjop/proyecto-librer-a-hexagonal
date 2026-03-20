@@ -13,3 +13,6 @@ sqlite3-api  # Generalmente incluido en Python, pero útil para entornos virtual
 
 # Utilidades
 python-dotenv>=1.0.0
+
+# Uso de variables de entorno 
+python-dotenv
